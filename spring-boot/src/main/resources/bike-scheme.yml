@@ -1,0 +1,153 @@
+openapi: 3.0.0
+info:
+  title: sportshop
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080/api/v1
+    description: dev server
+paths:
+  /bikes:
+    get:
+      summary: method to get list of bikes
+      tags:
+        - Bikes
+      operationId: getAllBikes
+      responses:
+        '200':
+          description: succsessfull answer with bike's list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bikes"
+        'default':
+          description: non standart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: method to create bike
+      tags:
+        - Bikes
+      operationId: createBike
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Bike"
+      responses:
+        '200':
+          description: succsessfull answer with created bike
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bikes"
+        'default':
+          description: non standart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /bikes/{bike_id}:
+    get:
+      summary: method to get bike by id
+      tags:
+        - Bikes
+      operationId: getBike
+      parameters:
+        - name: bike_id
+          in: path
+          required: true
+          description: bike id to find
+          schema:
+            type: string
+            example: b0d4ce5d-2757-4699-948c-cfa72ba94f86
+      responses:
+        '200':
+          description: succsessfull answer with bike info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bike"
+        'default':
+          description: non standart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      summary: method to delete bike
+      tags:
+        - Bikes
+      operationId: deleteBike
+      parameters:
+        - name: bike_id
+          in: path
+          required: true
+          description: bike id to delete
+          schema:
+            type: string
+            example: b0d4ce5d-2757-4699-948c-cfa72ba94f86
+      responses:
+        '200':
+          description: succsessfull answer with bike deleted
+          content:
+            {}
+        'default':
+          description: non standart
+          content:
+            {}
+
+
+
+components:
+  schemas:
+    Bike:
+      type: object
+      required:
+        - model
+        - name
+      properties:
+        model:
+          type: string
+          example: electro_bike
+        bike_id:
+          type: string
+          example: b0d4ce5d-2757-4699-948c-cfa72ba94f86
+        name:
+          type: string
+          example: stranger
+        wheel_diameter:
+          type: integer
+          example: 14
+        weight:
+          type: integer
+          example: 12
+        price:
+          type: number
+          example: 10005.34
+        status:
+          type: string
+          enum:
+            - available
+            - sold
+          description: special characteristics
+        sale_start_at:
+          type: string
+          format: 2022-07-01T15:00:00+01
+    Bikes:
+      type: array
+      items:
+        $ref: "#/components/schemas/Bike"
+    Error:
+      type: object
+      required:
+        - code
+        - name
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
